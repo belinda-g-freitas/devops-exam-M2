@@ -58,10 +58,10 @@ pipeline{
 
         stage("Push image to Docker Hub"){
             steps{
-                withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDS', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDS_BGFREITAS', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
                     sh """
                     docker login  --username $USERNAME --password $PASSWORD && \
-                    docker push hervlokossou/${BRANCH_NAME}/default_image_$env.BRANCH_NAME:latest
+                    docker push belindagfreitas/${BRANCH_NAME}/default_image_$env.BRANCH_NAME:latest
                     """
                 }
             }
