@@ -59,10 +59,10 @@ pipeline{
         stage("Push image to Docker Hub"){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDS_BGFREITAS', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
-                    sh """
+                    sh '''
                     docker login  --username $USERNAME --password $PASSWORD && \
                     docker push belindagfreitas/${BRANCH_NAME}_default_image:latest
-                    """
+                    '''
                 }
             }
         }
