@@ -37,22 +37,22 @@ pipeline{
                 sh "echo $BRANCH_NAME"
                 sh "echo $env.GIT_BRANCH"
                 sh "printenv"
-                sh "docker build -t hervlokossou/$env.BRANCH_NAME/default_image_$env.BRANCH_NAME ."
+                sh "docker build -t belindagfreitas/${BRANCH_NAME}_default_image ."
             }
         }
 
 
         stage('Test docker image') { 
             steps {
-                sh "docker run -d -p 5001:8000 --name default_container_$env.BRANCH_NAME hervlokossou/$env.BRANCH_NAME/default_image_$env.BRANCH_NAME"
+                sh "docker run -d -p 5001:8000 --name default_container_${BRANCH_NAME} belindagfreitas/${BRANCH_NAME}_default_image"
             }
         }
 
                 
         stage('Cleanup ') {
             steps {
-                sh "docker container stop default_container_$env.BRANCH_NAME"
-                sh "docker container rm default_container_$env.BRANCH_NAME" 
+                sh "docker container stop default_container_${BRANCH_NAME}"
+                sh "docker container rm default_container_${BRANCH_NAME}" 
             }
         }
 
@@ -61,17 +61,17 @@ pipeline{
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDS_BGFREITAS', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
                     sh """
                     docker login  --username $USERNAME --password $PASSWORD && \
-                    docker push belindagfreitas/${BRANCH_NAME}/default_image_$env.BRANCH_NAME:latest
+                    docker push belindagfreitas/${BRANCH_NAME}_default_image:latest
                     """
                 }
             }
         }
     } 
 
-    post{
-        always {
-            sh "docker container stop default_container_$env.BRANCH_NAME"
-            sh "docker container rm default_container_$env.BRANCH_NAME" 
-            }
-    }    
+    // post{
+    //     always {
+    //         sh "docker container stop default_container_$env.BRANCH_NAME"
+    //         sh "docker container rm default_container_$env.BRANCH_NAME" 
+    //         }
+    // }    
 }
